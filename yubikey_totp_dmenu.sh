@@ -22,7 +22,7 @@ exit_i3_nagbar() {
 check_installed() {
         for program in xclip ykman base64 dmenu i3-nagbar; do
                 if ! command -v "${program}" >/dev/null; then
-                        echo "missing ${program}" 1>&2
+                        echo "missing" "${program}" 1>&2
                         exit 1
                 fi
         done
@@ -54,9 +54,9 @@ main() {
         check_installed
 
         local yk_cnt
-        yk_cnt=$(ykman list | wc -l)
+        yk_cnt="$(ykman list | wc -l)"
 
-        if [[ ${yk_cnt} -eq 1 ]]; then
+        if [[ "${yk_cnt}" -eq 1 ]]; then
                 local accounts
                 local account
 
@@ -64,13 +64,13 @@ main() {
                         exit_i3_nagbar "Could not get a list of accounts"
                         return
                 fi
-                account="$(echo -n "${accounts}" | dmenu -i)"
-                if [[ -n ${account} ]]; then
+                account="$(dmenu -i <<<"${accounts}")"
+                if [[ -n "${account}" ]]; then
                         copy_clear "${account}"
                 fi
-        elif [[ ${yk_cnt} -eq 0 ]]; then
+        elif [[ "${yk_cnt}" -eq 0 ]]; then
                 exit_i3_nagbar "No yubikey inserted"
-        elif [[ ${yk_cnt} -gt 1 ]]; then
+        elif [[ "${yk_cnt}" -gt 1 ]]; then
                 exit_i3_nagbar "More than one yubikey inserted"
         fi
 }
