@@ -75,15 +75,22 @@ main() {
         fi
 }
 
-case "${1}" in
-        -h | --help)
-                cmd_help
-                exit 0
-                ;;
-        -t | --time)
-                shift
-                CLIP_TIME="${1}"
-                ;;
-esac
+while [[ "${#}" -gt 0 ]]; do
+        case "${1}" in
+                -h | --help)
+                        cmd_help
+                        exit 0
+                        ;;
+                -t | --time)
+                        shift
+                        if ! [[ "${1}" =~ ^[1-9][0-9]*$ ]]; then
+                                echo "--time requires a positive integer value" 1>&2
+                                exit 1
+                        fi
+                        CLIP_TIME="${1}"
+                        shift
+                        ;;
+        esac
+done
 
 main
